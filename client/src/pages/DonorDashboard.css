@@ -1,0 +1,581 @@
+/* ShareMeal Donor Dashboard Styles */
+
+.donor-dashboard-page {
+  min-height: 100vh;
+  background: #fffdf8;
+  color: #24352b;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Top Navigation Bar */
+.dd-navbar {
+  min-height: 78px;
+  padding: 0 clamp(16px, 6%, 48px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #efeee5;
+}
+
+.dd-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 800 22px 'Manrope', sans-serif;
+  color: #245b3d;
+  letter-spacing: -0.8px;
+  text-decoration: none;
+}
+
+.dd-logo-icon {
+  font-size: 26px;
+}
+
+.dd-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dd-user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #edf4e6;
+  color: #245b3d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dd-user-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #488257;
+}
+
+.dd-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #488257;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #dce3d7;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.dd-back-link:hover {
+  background: #f5f7ef;
+  color: #245b3d;
+  border-color: #c4d3bd;
+}
+
+/* Main Layout */
+.dd-main {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 36px clamp(16px, 5%, 36px) 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  box-sizing: border-box;
+}
+
+/* Header & Eyebrow */
+.dd-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dd-eyebrow {
+  display: inline-block;
+  color: #488257;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.dd-title {
+  margin: 0;
+  font: 800 clamp(28px, 3.5vw, 38px)/1.2 'Manrope', sans-serif;
+  color: #20392b;
+  letter-spacing: -1.2px;
+}
+
+.dd-subtitle {
+  margin: 0;
+  color: #6e776e;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 650px;
+}
+
+/* Alert Notification Banner */
+.dd-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.dd-alert-info {
+  background: #edf4e6;
+  color: #245b3d;
+  border: 1px solid #d4e4c7;
+}
+
+.dd-alert-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Statistics Cards Grid */
+.dd-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.dd-stat-card {
+  background: #ffffff;
+  border: 1px solid #e9eee4;
+  border-radius: 16px;
+  padding: 22px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 8px 24px rgba(36, 62, 36, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dd-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(36, 62, 36, 0.07);
+}
+
+.dd-stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 13px;
+  background: #edf4e6;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.dd-stat-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.dd-stat-number {
+  font: 800 28px/1.1 'Manrope', sans-serif;
+  color: #20392b;
+  letter-spacing: -0.8px;
+}
+
+.dd-stat-label {
+  font-size: 13px;
+  color: #778075;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Shared Card Container */
+.dd-card {
+  background: #ffffff;
+  border: 1px solid #e9eee4;
+  border-radius: 18px;
+  padding: 30px 32px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.04);
+}
+
+.dd-card-header {
+  margin-bottom: 24px;
+}
+
+.dd-card-title {
+  margin: 0;
+  font: 800 22px 'Manrope', sans-serif;
+  color: #263c2d;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dd-card-subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: #778075;
+}
+
+.dd-count-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #edf4e6;
+  color: #245b3d;
+}
+
+/* Donation Form Layout */
+.dd-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 24px;
+}
+
+.dd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dd-field-full {
+  grid-column: 1 / -1;
+}
+
+.dd-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2d4536;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dd-required {
+  color: #e11d48;
+  margin-left: 4px;
+}
+
+.dd-hint {
+  font-size: 11px;
+  font-weight: 400;
+  color: #8a9488;
+}
+
+.dd-input,
+.dd-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d6ddd2;
+  border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #24352b;
+  background: #fffdf8;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.dd-input:focus,
+.dd-textarea:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #347548;
+  box-shadow: 0 0 0 3px rgba(52, 117, 72, 0.15);
+}
+
+.dd-textarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.dd-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.dd-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  background: #347548;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 7px 18px rgba(52, 117, 72, 0.2);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.dd-btn-primary:hover:not(:disabled) {
+  background: #245b3d;
+  transform: translateY(-1px);
+}
+
+.dd-btn-primary:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.dd-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 22px;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #34533d;
+  background: #ffffff;
+  border: 1px solid #dce3d7;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dd-btn-secondary:hover {
+  background: #f5f7ef;
+  border-color: #c4d3bd;
+}
+
+/* Donations Table */
+.dd-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e9eee4;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.dd-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.dd-table th {
+  background: #f5f7ef;
+  color: #488257;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  border-bottom: 2px solid #e9eee4;
+}
+
+.dd-table td {
+  padding: 16px 18px;
+  color: #24352b;
+  border-bottom: 1px solid #f0f0e7;
+  vertical-align: middle;
+}
+
+.dd-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.dd-table tbody tr:hover {
+  background: #fafbf7;
+}
+
+.dd-table-title {
+  font-weight: 600;
+  color: #20392b;
+}
+
+.dd-table-meta {
+  font-size: 12px;
+  color: #8a9488;
+  margin-top: 3px;
+}
+
+.dd-qty-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #edf4e6;
+  color: #245b3d;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Status Badges */
+.dd-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.dd-status-available {
+  background: #edf4e6;
+  color: #245b3d;
+}
+
+.dd-status-claimed {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dd-status-completed {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* Row Actions */
+.dd-actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dd-action-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dd-btn-edit {
+  background: #ffffff;
+  border: 1px solid #dce3d7;
+  color: #245b3d;
+}
+
+.dd-btn-edit:hover {
+  background: #edf4e6;
+  border-color: #77a46a;
+}
+
+.dd-btn-delete {
+  background: #ffffff;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.dd-btn-delete:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+}
+
+/* Empty State */
+.dd-empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dd-empty-icon {
+  font-size: 42px;
+  margin-bottom: 4px;
+}
+
+.dd-empty-title {
+  margin: 0;
+  font: 700 18px 'Manrope', sans-serif;
+  color: #263c2d;
+}
+
+.dd-empty-text {
+  margin: 0;
+  color: #778075;
+  font-size: 14px;
+  max-width: 420px;
+  line-height: 1.6;
+}
+
+/* Footer */
+.dd-footer {
+  padding: 24px clamp(16px, 6%, 48px);
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #203c2b;
+  color: #e9f0e7;
+  font-size: 12px;
+}
+
+.dd-footer .dd-logo {
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.dd-footer p,
+.dd-footer span {
+  margin: 0;
+  color: #c2d0c1;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 850px) {
+  .dd-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .dd-form {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .dd-card {
+    padding: 22px 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .dd-navbar {
+    min-height: 65px;
+    padding: 10px 16px;
+  }
+
+  .dd-user-badge {
+    display: none;
+  }
+
+  .dd-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+}

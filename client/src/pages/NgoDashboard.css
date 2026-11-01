@@ -1,0 +1,104 @@
+/* ShareMeal NGO / Recipient Dashboard Styles */
+@import "./DonorDashboard.css";
+
+.ngo-dashboard-page {
+  min-height: 100vh;
+  background: #fffdf8;
+  color: #24352b;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ngo-role-banner {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.ngo-role-banner a {
+  color: #78350f;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.dd-btn-claim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  background: #347548;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(52, 117, 72, 0.2);
+}
+
+.dd-btn-claim:hover:not(:disabled) {
+  background: #245b3d;
+  transform: translateY(-1px);
+}
+
+.dd-btn-claim:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #6b7280;
+  box-shadow: none;
+}
+
+.dd-donor-chip {
+  font-size: 12px;
+  color: #59645b;
+}
+
+.dd-donor-name {
+  font-weight: 600;
+  color: #20392b;
+}
+
+.dd-tabs-nav {
+  display: flex;
+  gap: 12px;
+  border-bottom: 2px solid #efeee5;
+  margin-bottom: 24px;
+}
+
+.dd-tab-btn {
+  padding: 10px 18px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #59645b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: -2px;
+}
+
+.dd-tab-btn:hover {
+  color: #245b3d;
+}
+
+.dd-tab-btn.active {
+  color: #245b3d;
+  border-bottom-color: #347548;
+}
