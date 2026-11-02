@@ -15,7 +15,7 @@ export default function NgoDashboard() {
 
   // 1. Fetch authenticated user profile
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch("https://sharemeal-1qz0.onrender.com/api/auth/me", {
       method: "GET",
       credentials: "include",
     })
@@ -40,11 +40,11 @@ export default function NgoDashboard() {
   const reloadData = async () => {
     try {
       const [availRes, claimedRes] = await Promise.all([
-        fetch("http://localhost:5000/api/donations/available", {
+        fetch("https://sharemeal-1qz0.onrender.com/api/donations/available", {
           method: "GET",
           credentials: "include",
         }),
-        fetch("http://localhost:5000/api/donations/claimed", {
+        fetch("https://sharemeal-1qz0.onrender.com/api/donations/claimed", {
           method: "GET",
           credentials: "include",
         }),
@@ -77,11 +77,11 @@ export default function NgoDashboard() {
     async function fetchNgoDataOnMount() {
       try {
         const [availRes, claimedRes] = await Promise.all([
-          fetch("http://localhost:5000/api/donations/available", {
+          fetch("https://sharemeal-1qz0.onrender.com/api/donations/available", {
             method: "GET",
             credentials: "include",
           }),
-          fetch("http://localhost:5000/api/donations/claimed", {
+          fetch("https://sharemeal-1qz0.onrender.com/api/donations/claimed", {
             method: "GET",
             credentials: "include",
           }),
@@ -137,7 +137,7 @@ export default function NgoDashboard() {
     setMsg("");
 
     try {
-      const res = await fetch(`http://localhost:5000/api/donations/${donationId}/claim`, {
+      const res = await fetch(`https://sharemeal-1qz0.onrender.com/api/donations/${donationId}/claim`, {
         method: "POST",
         credentials: "include",
       });

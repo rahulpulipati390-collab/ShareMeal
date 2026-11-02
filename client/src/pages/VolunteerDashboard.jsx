@@ -8,7 +8,7 @@ export default function VolunteerDashboard() {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch("https://sharemeal-1qz0.onrender.com/api/auth/me", {
       method: "GET",
       credentials: "include",
     })
@@ -32,7 +32,7 @@ export default function VolunteerDashboard() {
   const loadDeliveries = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/donations/volunteer", {
+      const res = await fetch("https://sharemeal-1qz0.onrender.com/api/donations/volunteer", {
         method: "GET",
         credentials: "include",
       });
@@ -58,7 +58,7 @@ export default function VolunteerDashboard() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5000/api/auth/logout", {
+      await fetch("https://sharemeal-1qz0.onrender.com/api/auth/logout", {
         method: "POST",
         credentials: "include",
       });

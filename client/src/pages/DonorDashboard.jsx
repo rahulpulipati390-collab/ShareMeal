@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DonorDashboard.css";
 
+const API_URL = "https://sharemeal-1qz0.onrender.com";
+
 export default function DonorDashboard() {
   const [user, setUser] = useState(null);
   const [donations, setDonations] = useState([]);
@@ -20,9 +22,9 @@ export default function DonorDashboard() {
 
   const navigate = useNavigate();
 
-  // fetch logged‑in user for greeting
+  // Fetch logged-in user
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/me", {
+    fetch(`${API_URL}/api/auth/me`, {
       method: "GET",
       credentials: "include",
     })
@@ -43,15 +45,16 @@ export default function DonorDashboard() {
       });
   }, []);
 
-  // fetch donor's own donations
+  // Fetch donor's donations
   const reloadDonations = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/donations", {
+      const res = await fetch(`${API_URL}/api/donations`, {
         method: "GET",
         credentials: "include",
       });
       const data = await res.json();
+
       if (!res.ok) {
         setDonations([]);
         if (res.status === 401) {
@@ -61,6 +64,7 @@ export default function DonorDashboard() {
         }
         return;
       }
+
       setDonations(Array.isArray(data.donations) ? data.donations : []);
     } catch (e) {
       console.error("Fetch donations error:", e);
@@ -73,14 +77,17 @@ export default function DonorDashboard() {
 
   useEffect(() => {
     let ignore = false;
+
     async function fetchDonationsOnMount() {
       try {
-        const res = await fetch("http://localhost:5000/api/donations", {
+        const res = await fetch(`${API_URL}/api/donations`, {
           method: "GET",
           credentials: "include",
         });
         const data = await res.json();
+
         if (ignore) return;
+
         if (!res.ok) {
           setDonations([]);
           if (res.status === 401) {
@@ -90,6 +97,7 @@ export default function DonorDashboard() {
           }
           return;
         }
+
         setDonations(Array.isArray(data.donations) ? data.donations : []);
       } catch (e) {
         if (!ignore) {
@@ -103,7 +111,9 @@ export default function DonorDashboard() {
         }
       }
     }
+
     fetchDonationsOnMount();
+
     return () => {
       ignore = true;
     };
@@ -128,10 +138,12 @@ export default function DonorDashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+
     const method = editingId ? "PUT" : "POST";
     const url = editingId
-      ? `http://localhost:5000/api/donations/${editingId}`
-      : "http://localhost:5000/api/donations";
+      ? `${API_URL}/api/donations/${editingId}`
+      : `${API_URL}/api/donations`;
+
     try {
       const res = await fetch(url, {
         method,
@@ -139,11 +151,20 @@ export default function DonorDashboard() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+
       const data = await res.json();
+
       if (!res.ok) {
         throw new Error(data?.message || "Failed to save donation.");
       }
-      setMsg(data?.message || (editingId ? "Donation updated successfully." : "Donation created successfully!"));
+
+      setMsg(
+        data?.message ||
+        (editingId
+          ? "Donation updated successfully."
+          : "Donation created successfully!")
+      );
+
       setForm({
         title: "",
         description: "",
@@ -152,6 +173,7 @@ export default function DonorDashboard() {
         pickupAddress: "",
         contactInfo: "",
       });
+
       setEditingId(null);
       await reloadDonations();
     } catch (err) {
@@ -170,21 +192,27 @@ export default function DonorDashboard() {
       pickupAddress: don.pickupAddress || don.location || "",
       contactInfo: don.contactInfo || "",
     });
+
     setEditingId(don._id);
     window.scrollTo({ top: 200, behavior: "smooth" });
   };
 
   const deleteDonation = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this donation?")) return;
+    if (!window.confirm("Are you sure you want to delete this donation?"))
+      return;
+
     try {
-      const res = await fetch(`http://localhost:5000/api/donations/${id}`, {
+      const res = await fetch(`${API_URL}/api/donations/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
+
       const data = await res.json();
+
       if (!res.ok) {
         throw new Error(data?.message || "Failed to delete donation.");
       }
+
       setMsg(data?.message || "Donation deleted successfully.");
       await reloadDonations();
     } catch (err) {
@@ -193,12 +221,16 @@ export default function DonorDashboard() {
   };
 
   const donationList = Array.isArray(donations) ? donations : [];
-  const totalQuantity = donationList.reduce((sum, d) => sum + (Number(d.quantity) || 0), 0);
-  const activeDonations = donationList.filter((d) => !d.status || d.status === "available");
+  const totalQuantity = donationList.reduce(
+    (sum, d) => sum + (Number(d.quantity) || 0),
+    0
+  );
+  const activeDonations = donationList.filter(
+    (d) => !d.status || d.status === "available"
+  );
 
   return (
     <div className="donor-dashboard-page">
-      {/* Top Navigation */}
       <nav className="dd-navbar">
         <a href="/" className="dd-logo">
           <span className="dd-logo-icon">🥗</span> ShareMeal
@@ -211,39 +243,41 @@ export default function DonorDashboard() {
               {user.name} ({user.role || "Donor"})
             </div>
           )}
-          <button className="dd-back-link" onClick={() => { console.log('Back button clicked'); navigate('/'); console.log('After navigate, path:', window.location.pathname); }}>← Back to Home</button>
+
+          <button
+            className="dd-back-link"
+            onClick={() => navigate("/")}
+          >
+            ← Back to Home
+          </button>
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="dd-main">
-        {/* Page Header */}
         <header className="dd-header">
           <span className="dd-eyebrow">FOOD DONOR PORTAL</span>
           <h1 className="dd-title">
             {user ? `Welcome back, ${user.name}` : "Donor Dashboard"}
           </h1>
           <p className="dd-subtitle">
-            Manage your surplus food listings, track pickup statuses, and connect surplus
-            meals with local NGOs and volunteers.
+            Manage your surplus food listings, track pickup statuses, and
+            connect surplus meals with local NGOs and volunteers.
           </p>
         </header>
 
-        {/* Status Message Alert */}
         {msg && (
           <div
-            className={`dd-alert ${
-              msg.toLowerCase().includes("failed") || msg.toLowerCase().includes("error")
+            className={`dd-alert ${msg.toLowerCase().includes("failed") ||
+                msg.toLowerCase().includes("error")
                 ? "dd-alert-error"
                 : "dd-alert-info"
-            }`}
+              }`}
             role="status"
           >
             <span>{msg}</span>
           </div>
         )}
 
-        {/* Statistics Grid */}
         <section className="dd-stats-grid">
           <article className="dd-stat-card">
             <div className="dd-stat-icon">🍲</div>
@@ -264,13 +298,14 @@ export default function DonorDashboard() {
           <article className="dd-stat-card">
             <div className="dd-stat-icon">📦</div>
             <div className="dd-stat-content">
-              <span className="dd-stat-number">{activeDonations.length}</span>
+              <span className="dd-stat-number">
+                {activeDonations.length}
+              </span>
               <span className="dd-stat-label">Available for Pickup</span>
             </div>
           </article>
         </section>
 
-        {/* Add / Edit Donation Form Card */}
         <section className="dd-card">
           <div className="dd-card-header">
             <h2 className="dd-card-title">
@@ -366,7 +401,9 @@ export default function DonorDashboard() {
             <div className="dd-field dd-field-full">
               <label htmlFor="description">
                 Description & Dietary Notes
-                <span className="dd-hint">Ingredients, packaging, or storage advice</span>
+                <span className="dd-hint">
+                  Ingredients, packaging, or storage advice
+                </span>
               </label>
               <textarea
                 id="description"
@@ -387,8 +424,8 @@ export default function DonorDashboard() {
                 {submitting
                   ? "Saving..."
                   : editingId
-                  ? "Update Donation"
-                  : "Create Food Donation"}
+                    ? "Update Donation"
+                    : "Create Food Donation"}
               </button>
 
               {editingId && (
@@ -404,7 +441,6 @@ export default function DonorDashboard() {
           </form>
         </section>
 
-        {/* Donation List Card */}
         <section className="dd-card">
           <div className="dd-card-header">
             <h2 className="dd-card-title">
@@ -425,8 +461,8 @@ export default function DonorDashboard() {
               <div className="dd-empty-icon">🍲</div>
               <h3 className="dd-empty-title">No food donations listed yet</h3>
               <p className="dd-empty-text">
-                Your listed surplus food will appear here. Fill out the form above to share
-                meals with the community.
+                Your listed surplus food will appear here. Fill out the form
+                above to share meals with the community.
               </p>
             </div>
           ) : (
@@ -442,33 +478,42 @@ export default function DonorDashboard() {
                     <th>Actions</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {donationList.map((d) => (
                     <tr key={d._id}>
                       <td>
                         <div className="dd-table-title">{d.title}</div>
                         {d.description && (
-                          <div className="dd-table-meta">{d.description}</div>
+                          <div className="dd-table-meta">
+                            {d.description}
+                          </div>
                         )}
                       </td>
+
                       <td>
-                        <span className="dd-qty-badge">{d.quantity} meals</span>
+                        <span className="dd-qty-badge">
+                          {d.quantity} meals
+                        </span>
                       </td>
+
                       <td>
                         {d.expiryDate
                           ? new Date(d.expiryDate).toLocaleDateString()
                           : "—"}
                       </td>
+
                       <td>{d.pickupAddress || d.location || "—"}</td>
+
                       <td>
                         <span
-                          className={`dd-status dd-status-${
-                            d.status || "available"
-                          }`}
+                          className={`dd-status dd-status-${d.status || "available"
+                            }`}
                         >
                           {d.status || "available"}
                         </span>
                       </td>
+
                       <td>
                         <div className="dd-actions-cell">
                           <button
@@ -478,6 +523,7 @@ export default function DonorDashboard() {
                           >
                             Edit
                           </button>
+
                           <button
                             type="button"
                             onClick={() => deleteDonation(d._id)}
@@ -496,7 +542,6 @@ export default function DonorDashboard() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="dd-footer">
         <div className="dd-logo">
           <span className="dd-logo-icon">🥗</span> ShareMeal

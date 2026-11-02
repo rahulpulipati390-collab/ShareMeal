@@ -1,10 +1,11 @@
-
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import DonorDashboard from "./pages/DonorDashboard";
 import NgoDashboard from "./pages/NgoDashboard";
 import VolunteerDashboard from "./pages/VolunteerDashboard";
+
+const API_URL = "https://sharemeal-1qz0.onrender.com";
 
 function App() {
   const [showSignup, setShowSignup] = useState(false);
@@ -21,6 +22,10 @@ function App() {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const hasRedirected = useRef(false);
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -54,15 +59,12 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(form),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
+      });
 
       const data = await response.json();
 
@@ -84,16 +86,11 @@ function App() {
     }
   }
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
-    const hasRedirected = useRef(false);
-  // On first page load, if user is already authenticated on the landing page, route to their role dashboard.
-  // Subsequent navigation to '/' (e.g., via Back button) will no longer auto‑redirect, allowing the Home page to be viewed.
   useEffect(() => {
     if (!hasRedirected.current && location.pathname === "/") {
       hasRedirected.current = true;
-      fetch("http://localhost:5000/api/auth/me", {
+
+      fetch(`${API_URL}/api/auth/me`, {
         method: "GET",
         credentials: "include",
       })
@@ -101,6 +98,7 @@ function App() {
         .then((data) => {
           if (data && data.user && data.user.role) {
             const role = data.user.role;
+
             if (role === "ngo") {
               navigate("/ngo", { replace: true });
             } else if (role === "volunteer") {
@@ -110,10 +108,9 @@ function App() {
             }
           }
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }, [location.pathname, navigate]);
-
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -121,15 +118,12 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(loginForm),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(loginForm),
+      });
 
       const data = await response.json();
 
@@ -140,22 +134,25 @@ function App() {
       setMessage(data.message || "Login successful!");
       setLoginForm({ email: "", password: "" });
 
-      // fetch user profile
-      const meRes = await fetch("http://localhost:5000/api/auth/me", {
+      const meRes = await fetch(`${API_URL}/api/auth/me`, {
         method: "GET",
         credentials: "include",
       });
+
       if (meRes.ok) {
         const meData = await meRes.json();
         const role = meData.user?.role;
-        console.log('Redirecting user based on role:', role);
-        if (role === 'ngo') {
-          navigate('/ngo');
-        } else if (role === 'volunteer') {
-          navigate('/volunteer');
+
+        console.log("Redirecting user based on role:", role);
+
+        if (role === "ngo") {
+          navigate("/ngo");
+        } else if (role === "volunteer") {
+          navigate("/volunteer");
         } else {
-          navigate('/donor');
+          navigate("/donor");
         }
+
         closeForms();
       }
     } catch (error) {
@@ -165,10 +162,11 @@ function App() {
     }
   }
 
-    return (
-    
-      <Routes>
-        <Route path="/" element={
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
           <div className="app">
             <nav className="navbar">
               <a className="logo" href="#home">
@@ -314,7 +312,9 @@ function App() {
 
                     <span className="eyebrow">JOIN SHAREMEAL</span>
                     <h2>Create your account</h2>
-                    <p>Be part of a community that shares food and kindness.</p>
+                    <p>
+                      Be part of a community that shares food and kindness.
+                    </p>
 
                     <label htmlFor="name">Full name</label>
                     <input
@@ -462,12 +462,13 @@ function App() {
               <span>© 2026 ShareMeal</span>
             </footer>
           </div>
-           } />
-        <Route path="/donor" element={<DonorDashboard />} />
-        <Route path="/ngo" element={<NgoDashboard />} />
-        <Route path="/volunteer" element={<VolunteerDashboard />} />
-      </Routes>
-    
+        }
+      />
+
+      <Route path="/donor" element={<DonorDashboard />} />
+      <Route path="/ngo" element={<NgoDashboard />} />
+      <Route path="/volunteer" element={<VolunteerDashboard />} />
+    </Routes>
   );
 }
 
