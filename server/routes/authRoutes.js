@@ -4,30 +4,32 @@ const rateLimit = require("express-rate-limit");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const authMiddleware = require("../middleware/authMiddleware");
 
-// Rate limiting for authentication endpoints
+const router = express.Router();
 
+const createLimiter = () =>
+  rateLimit({
+    windowMs: 5 * 1000,
+    max: () =>
+      process.env.RATE_LIMIT_MAX
+        ? parseInt(process.env.RATE_LIMIT_MAX, 10)
+        : 10,
+    skip: () => !process.env.ENABLE_RATE_LIMIT_IN_TESTS,
+    message: { message: "Too many requests, please try again later." },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
 
-// Rate limiting for authentication endpoints
-const createLimiter = () => rateLimit({
-  windowMs: 5 * 1000,
-  max: () => (process.env.RATE_LIMIT_MAX ? parseInt(process.env.RATE_LIMIT_MAX, 10) : 10),
-  skip: () => !process.env.ENABLE_RATE_LIMIT_IN_TESTS,
-  message: { message: "Too many requests, please try again later." },
-  standardHeaders: true,
-  legacyHeaders: false,
-});
 const signupLimiter = createLimiter();
 const loginLimiter = createLimiter();
 
-const router = express.Router();
-const authMiddleware = require("../middleware/authMiddleware");
-// Test API
+// Test route
 router.get("/test", (req, res) => {
   res.json({ message: "Auth routes working!" });
 });
 
-// Signup API
+// Signup
 router.post("/signup", signupLimiter, async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -71,6 +73,12 @@ router.post("/signup", signupLimiter, async (req, res) => {
       role,
     });
 
+    console.log("========== SIGNUP SUCCESS ==========");
+    console.log("USER SAVED:", user._id.toString());
+    console.log("SAVED DATABASE:", User.db.name);
+    console.log("SAVED COLLECTION:", User.collection.name);
+    console.log("=====================================");
+
     return res.status(201).json({
       message: "Account created successfully!",
       user: {
@@ -81,13 +89,15 @@ router.post("/signup", signupLimiter, async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("========== SIGNUP ERROR ==========");
+    console.error(error);
+    console.error("===================================");
+
     if (error.code === 11000) {
       return res.status(409).json({
         message: "Email is already registered.",
       });
     }
-
-    console.error("Signup error:", error.message);
 
     return res.status(500).json({
       message: "Unable to create account.",
@@ -95,7 +105,7 @@ router.post("/signup", signupLimiter, async (req, res) => {
   }
 });
 
-// Login API with JWT authentication
+// Login
 router.post("/login", loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -106,10 +116,12 @@ router.post("/login", loginLimiter, async (req, res) => {
       });
     }
 
-    // Use JWT secret from environment or fallback for tests
-const JWT_SECRET = process.env.JWT_SECRET || 'ShareMeal_Test_Secret';
-// No explicit error handling needed; fallback will be used.
-
+    if (!process.env.JWT_SECRET) {
+      console.error("JWT_SECRET is missing.");
+      return res.status(500).json({
+        message: "Authentication configuration error.",
+      });
+    }
 
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -136,15 +148,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ShareMeal_Test_Secret';
 
     const token = jwt.sign(
       { userId: user._id.toString() },
-      JWT_SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
     res.cookie("token", token, {
       httpOnly: true,
-      // In production enforce secure flag; in dev allow insecure.
       secure: process.env.NODE_ENV === "production",
-      // Use SameSite=None for cross-origin requests (frontend runs on different port).
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000,
       path: "/",
@@ -160,7 +170,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ShareMeal_Test_Secret';
       },
     });
   } catch (error) {
-    console.error("Login error:", error.message);
+    console.error("Login error:", error);
 
     return res.status(500).json({
       message: "Unable to log in. Please try again.",
@@ -168,12 +178,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'ShareMeal_Test_Secret';
   }
 });
 
-// Logout API
+// Logout
 router.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     path: "/",
   });
 
@@ -182,11 +192,10 @@ router.post("/logout", (req, res) => {
   });
 });
 
+// Current logged-in user
 router.get("/me", authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select(
-      "-password"
-    );
+    const user = await User.findById(req.user.userId).select("-password");
 
     if (!user) {
       return res.status(404).json({
@@ -203,7 +212,7 @@ router.get("/me", authMiddleware, async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Fetch user error:", error.message);
+    console.error("Fetch user error:", error);
 
     return res.status(500).json({
       message: "Unable to fetch user details.",
