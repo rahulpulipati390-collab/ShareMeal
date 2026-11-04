@@ -36,6 +36,7 @@ const defaultAllowedOrigins = [
   "http://127.0.0.1:5180",
   "http://127.0.0.1:5181",
   "http://127.0.0.1:5182",
+  "https://sharemeal-nine.vercel.app",
 ];
 
 const envAllowed = process.env.ALLOWED_ORIGINS
